@@ -6,8 +6,9 @@
 #include "Banco.h"
 #include "Cliente.h"
 #include "Transaccion.h"
+#include "Excepciones.h"
 
-void mostrarMenuBanco(Banco& banco) {
+void mostrarMenuBanco(Banco &banco) {
     int opcion;
     do {
         std::cout << "\n=== MENU DEL BANCO ===\n";
@@ -27,7 +28,7 @@ void mostrarMenuBanco(Banco& banco) {
             case 1: {
                 std::string dni, nombre, tipo_cliente;
                 int ano_ingreso;
-                bool activo = true; // Al registrar, por defecto se considera activo
+                bool activo = true;
                 std::cout << "Ingrese DNI: ";
                 std::cin >> dni;
                 std::cout << "Ingrese nombre: ";
@@ -38,7 +39,7 @@ void mostrarMenuBanco(Banco& banco) {
                 std::cout << "Ingrese anio de ingreso: ";
                 std::cin >> ano_ingreso;
 
-                Cliente* nuevo_cliente = new Cliente(dni, nombre, tipo_cliente, ano_ingreso, activo);
+                Cliente *nuevo_cliente = new Cliente(dni, nombre, tipo_cliente, ano_ingreso, activo);
                 banco.registrarCliente(nuevo_cliente);
                 std::cout << "\nCliente registrado correctamente\n";
                 break;
@@ -67,7 +68,7 @@ void mostrarMenuBanco(Banco& banco) {
                 std::cout << "Ingrese DNI del Cliente: ";
                 std::cin >> dni_cliente;
 
-                Transaccion* nueva_transaccion = new Transaccion(tipo, monto, fecha, dni_cliente);
+                Transaccion *nueva_transaccion = new Transaccion(tipo, monto, fecha, dni_cliente);
                 banco.registrarTransaccion(nueva_transaccion);
                 std::cout << "Transaccion realizada correctamente\n";
                 break;
@@ -106,7 +107,7 @@ void mostrarMenuBanco(Banco& banco) {
     } while (opcion != 0);
 }
 
-void mostrarMenuCliente(Cliente& cliente, Banco& banco) {
+void mostrarMenuCliente(Cliente &cliente, Banco &banco) {
     int opcion;
     std::string dni_cliente = cliente.getDni(); // Obtenemos el DNI del cliente
 
@@ -126,7 +127,7 @@ void mostrarMenuCliente(Cliente& cliente, Banco& banco) {
                 std::cout << "Ingrese monto a depositar: ";
                 std::cin >> monto;
 
-                Transaccion* nueva_transaccion = new Transaccion("Deposito", monto, "2024-06-16", dni_cliente);
+                Transaccion *nueva_transaccion = new Transaccion("Deposito", monto, "2024-06-16", dni_cliente);
                 banco.registrarTransaccion(nueva_transaccion);
                 std::cout << "Deposito realizado correctamente.\n";
                 break;
@@ -136,7 +137,7 @@ void mostrarMenuCliente(Cliente& cliente, Banco& banco) {
                 std::cout << "Ingrese monto a extraer: ";
                 std::cin >> monto;
 
-                Transaccion* nueva_transaccion = new Transaccion("Extraccion", monto, "2024-06-16", dni_cliente);
+                Transaccion *nueva_transaccion = new Transaccion("Extraccion", monto, "2024-06-16", dni_cliente);
                 banco.registrarTransaccion(nueva_transaccion);
                 std::cout << "Extraccion realizada correctamente.\n";
                 break;
@@ -156,8 +157,8 @@ void mostrarMenuCliente(Cliente& cliente, Banco& banco) {
 
 int main() {
     Banco banco;
-
-    int opcion;
+    int opcion, i = 1;
+    std::string claveBanco; //Clave del banco: drakeucc24
     do {
         std::cout << "\n=== MENU PRINCIPAL ===\n";
         std::cout << "1. Acceder como banco\n";
@@ -168,15 +169,34 @@ int main() {
 
         switch (opcion) {
             case 1:
-                mostrarMenuBanco(banco);
+                try {
+                    for (i = 0; i < 3; ++i) {
+                        std::cout << "Ingrese la clave de seguridad para acceder al menu del banco\n";
+                        std::cin >> claveBanco;
+                        if (claveBanco == "drakeucc24") {
+                            mostrarMenuBanco(banco);
+                            break;
+                        } else {
+                            std::cout << "Clave incorrecta, por favor, reintentar\n";
+                            std::cout << "Intentos restantes: " << 2 - i << "\n";
+                        }
+                    }
+                    if (i == 3) {
+                        throw MaximoIntentosAlcanzado();
+                    }
+                } catch (const MaximoIntentosAlcanzado &e) {
+                    std::cout << e.what() << std::endl;
+                }
+
+                return 0;
+
                 break;
             case 2: {
                 std::string dni;
                 std::cout << "Ingrese su DNI: ";
                 std::cin >> dni;
 
-                // Buscar el cliente en el banco según el DNI ingresado
-                Cliente* cliente = banco.buscarCliente(dni);
+                Cliente *cliente = banco.buscarCliente(dni);
                 if (cliente) {
                     mostrarMenuCliente(*cliente, banco);
                 } else {
@@ -185,7 +205,7 @@ int main() {
                 break;
             }
             case 0:
-                std::cout << "Saliendo del Programa.\n";
+                std::cout << "Saliendo del programa.\n";
                 break;
             default:
                 std::cout << "Opcion invalida. Intente nuevamente.\n";

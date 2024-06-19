@@ -4,17 +4,17 @@ Transaccion::Transaccion(std::string _tipo, double _monto, std::string _fecha, s
     : tipo(_tipo), monto(_monto), fecha(_fecha), dni_cliente(_dni_cliente) {}
 
 std::string Transaccion::getTipo() const {
-  return tipo;
+    return tipo;
 }
 
 double Transaccion::getMonto() const {
-  return monto;
+    return monto;
 }
 
 std::string Transaccion::getFecha() const {
-  return fecha;
+    return fecha;
 }
 
 std::string Transaccion::getDniCliente() const {
-  return dni_cliente;
+    return dni_cliente;
 }

@@ -5,4 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(trabajo_final main.cpp banco.cpp Banco.h cliente.h transaccion.h cliente.cpp transaccion.cpp)
+add_executable(trabajo_final main.cpp banco.cpp Banco.h cliente.h transaccion.h cliente.cpp transaccion.cpp
+        Excepciones.cpp
+        Excepciones.h)

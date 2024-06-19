@@ -18,6 +18,7 @@ Banco::~Banco() {
     transacciones.clear();
 }
 
+
 void Banco::registrarCliente(Cliente* cliente) {
     clientes.push_back(cliente);
     guardarClientes();  // Guardar clientes después de registrar uno nuevo
